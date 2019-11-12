@@ -1,0 +1,19 @@
+package com.shopping.vn.dto;
+
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PrivilegeDto {
+	private Long id;
+
+	private String name;
+
+	private List<RoleDto> roles;
+
+}
