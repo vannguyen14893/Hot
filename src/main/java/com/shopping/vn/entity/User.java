@@ -1,7 +1,8 @@
 package com.shopping.vn.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,7 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.shopping.vn.dto.UserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +37,11 @@ public class User implements Serializable {
 	private Long id;
 	@Column(name = "full_name")
 	private String fullName;
-	
 	private String email;
 	private String password;
 	private String mobile;
 	private int status;
+	private Date birthDay;
 	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable( 
         name = "users_roles", 
@@ -45,5 +50,32 @@ public class User implements Serializable {
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
     private List<Role> roles;
-
+	
+	 
+	public static final User convertSave(UserDto userDto,Role role) {
+		BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+		User user=new User();
+		user.setEmail(userDto.getEmail());
+		user.setBirthDay(userDto.getBirthDay());
+		user.setFullName(userDto.getFullName());
+		user.setMobile(userDto.getMobile());
+		user.setPassword(encoder.encode(userDto.getPassword()));
+		user.setStatus(userDto.getStatus());
+		List<Role> roles = new ArrayList<>();
+		roles.add(role);
+		user.setRoles(roles);
+		return user;
+	}
+	public static final User convertUpdate(UserDto userDto,User user,List<Role> roles) {
+		BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+		user.setId(userDto.getId());
+		user.setEmail(userDto.getEmail());
+		user.setBirthDay(userDto.getBirthDay());
+		user.setFullName(userDto.getFullName());
+		user.setMobile(userDto.getMobile());
+		user.setPassword(encoder.encode(userDto.getPassword()));
+		user.setStatus(userDto.getStatus());
+		user.setRoles(roles);
+		return user;
+	}
 }

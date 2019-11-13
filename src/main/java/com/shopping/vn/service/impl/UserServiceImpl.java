@@ -16,16 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.vn.dto.MenuDto;
 import com.shopping.vn.dto.PrivilegeDto;
+import com.shopping.vn.dto.RoleDto;
+import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.dto.UserDto;
 import com.shopping.vn.entity.Privilege;
 import com.shopping.vn.entity.Role;
 import com.shopping.vn.entity.User;
+import com.shopping.vn.exceptions.RoleServiceException;
 import com.shopping.vn.exceptions.UserServiceException;
 import com.shopping.vn.repository.MenuRepository;
 import com.shopping.vn.repository.PrivilegeRepository;
 import com.shopping.vn.repository.RoleRepository;
 import com.shopping.vn.repository.UserRepository;
 import com.shopping.vn.service.UserService;
+import com.shopping.vn.utils.Constants;
 
 @Service
 @Transactional
@@ -81,21 +85,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getUser(String email) {
 		User user = userRepository.findUserByEmail(email);
-		ModelMapper modelMapper = new ModelMapper();
-		UserDto userDto = modelMapper.map(user, UserDto.class);
-		return userDto;
+		return UserDto.convertUser(user);
 	}
 
 	@Override
-	public String permissions(Long userId) {
-		List<Object[]> privileges = privilegeRepository.readAllByUser(userId);
-		List<String> permissions = new ArrayList<>();
+	public boolean checkPermission(String email, String permission) {
+		List<Object[]> privileges = privilegeRepository.readAllByUser(email);
 		for (Object object[] : privileges) {
-			PrivilegeDto privilegeDto = new PrivilegeDto();
-			privilegeDto.setName(object[0].toString());
-			permissions.add(privilegeDto.getName());
+			if (object[0].toString().equals(permission)) {
+				return true;
+			}
 		}
-		return permissions.toString();
+		return false;
+		
 	}
 
 	@Override
@@ -113,14 +115,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void registrationUser(UserDto userDto) {
-		ModelMapper mapper = new ModelMapper();
-		User user = mapper.map(userDto, User.class);
-		List<Role> roles = new ArrayList<>();
 		Role role = roleRepository.findRoleByRoleName("ROLE_USER");
-		roles.add(role);
-		user.setRoles(roles);
-		user.setPassword(encoder.encode(userDto.getPassword()));
-		userRepository.save(user);
+		if (role == null)
+			throw new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND);
+		userRepository.save(User.convertSave(userDto, role));
 	}
 
 	@Override
@@ -143,18 +141,41 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateUser(UserDto userDto) {
 		User user = userRepository.findById(userDto.getId())
-				.orElseThrow(() -> new UserServiceException("user not found "));
-		ModelMapper mapper = new ModelMapper();
-		user = mapper.map(userDto, User.class);
-		user.setPassword(encoder.encode(userDto.getPassword()));
-		userRepository.save(user);
+				.orElseThrow(() -> new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND));
+		List<Role> roles = new ArrayList<>();
+		for (Long id : userDto.getRoleIds()) {
+			Role role = roleRepository.findById(id)
+					.orElseThrow(() -> new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND));
+			roles.add(role);
+		}
+
+		userRepository.save(User.convertUpdate(userDto, user, roles));
 	}
 
 	@Override
 	public void deleteUser(Long id) {
-		User user = userRepository.findById(id).orElseThrow(() -> new UserServiceException("user not found " + id));
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND + id));
 		user.setStatus(1);
 		userRepository.save(user);
 
 	}
+
+	@Override
+	public List<UserDto> readAll(SortFilterDto filter) {
+		List<User> users = userRepository.readAll(filter);
+		List<UserDto> userDtos = new ArrayList<>();
+		for (User user : users) {
+			userDtos.add(UserDto.convertUser(user));
+		}
+		return userDtos;
+	}
+
+	@Override
+	public UserDto findById(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND + id));
+		return UserDto.convertUser(user);
+	}
+
 }

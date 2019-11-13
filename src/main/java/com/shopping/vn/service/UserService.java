@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.shopping.vn.dto.MenuDto;
+import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.dto.UserDto;
 
 public interface UserService extends UserDetailsService {
 	UserDto getUser(String email);
 
-	String permissions(Long userId);
+	boolean checkPermission(String email,String permission);
 
 	List<MenuDto> menus(Long userId);
 
@@ -23,4 +24,10 @@ public interface UserService extends UserDetailsService {
 	void updateUser(UserDto userDto);
 
 	void deleteUser(Long id);
+	
+	List<UserDto> readAll(SortFilterDto filter);
+	
+	UserDto findById(Long id);
+	
+	
 }

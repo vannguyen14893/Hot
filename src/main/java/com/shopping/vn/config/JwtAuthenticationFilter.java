@@ -2,7 +2,6 @@ package com.shopping.vn.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,16 +19,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.shopping.vn.entity.User;
 import com.shopping.vn.exceptions.UserServiceException;
 import com.shopping.vn.repository.UserRepository;
+import com.shopping.vn.service.UserService;
 import com.shopping.vn.utils.SecurityConstants;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Transactional
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtTokenProvider tokenProvider;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	UserService userService;
 
+	String permission="";
 	@Override
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			FilterChain filterChain) throws ServletException, IOException {
@@ -45,11 +51,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-
 			}
-
+				
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if (!userService.checkPermission(principal.toString(), permission)) {
+				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);	
+				return;
+			}
 		} catch (Exception ex) {
-			logger.error("Could not set user authentication in security context", ex);
+			log.error("Could not set user authentication in security context", ex);
 		}
 
 		filterChain.doFilter(httpServletRequest, httpServletResponse);
@@ -58,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private String getJWTFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader(SecurityConstants.HEADER_STRING);
-
+		 permission = request.getHeader("Permission");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 			return bearerToken.substring(7, bearerToken.length());
 		}

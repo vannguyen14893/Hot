@@ -19,17 +19,19 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 	// Generate the token
 
 	public String generateToken(Authentication authentication) {
 		String email = authentication.getName();
-		
-		User user =  userRepository.findUserByEmail(email);
+
+		User user = userRepository.findUserByEmail(email);
 		Date now = new Date(System.currentTimeMillis());
 
 		Date expiryDate = new Date(now.getTime() + SecurityConstants.EXPIRATION_TIME);
@@ -51,15 +53,15 @@ public class JwtTokenProvider {
 			Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token);
 			return true;
 		} catch (SignatureException ex) {
-			System.out.println("Invalid JWT Signature");
+			log.error("Invalid JWT Signature");
 		} catch (MalformedJwtException ex) {
-			System.out.println("Invalid JWT Token");
+			log.error("Invalid JWT Token");
 		} catch (ExpiredJwtException ex) {
-			System.out.println("Expired JWT token");
+			log.error("Expired JWT token");
 		} catch (UnsupportedJwtException ex) {
-			System.out.println("Unsupported JWT token");
+			log.error("Unsupported JWT token");
 		} catch (IllegalArgumentException ex) {
-			System.out.println("JWT claims string is empty");
+			log.error("JWT claims string is empty");
 		}
 		return false;
 	}
@@ -69,7 +71,6 @@ public class JwtTokenProvider {
 	public Long getUserIdFromJWT(String token) {
 		Claims claims = Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token).getBody();
 		String id = (String) claims.get("id");
-
 		return Long.parseLong(id);
 	}
 }

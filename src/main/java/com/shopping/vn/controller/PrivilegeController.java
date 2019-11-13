@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,14 +22,12 @@ public class PrivilegeController {
 
 	@PostMapping(value = "/read-all-priviege")
 	public ResponseEntity<?> readAll(@RequestParam("name") String name, @RequestBody List<Long> roleIds) {
-		try {
+		
 			List<PrivilegeDto> privilegeDtos = privilegeService.readAll(name, roleIds);
 			if (CollectionUtils.isEmpty(privilegeDtos)) {
-				return new ResponseEntity<>(Constants.MESSENGER.NO_DATA, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(Constants.MESSENGER.NO_DATA, HttpStatus.NO_CONTENT);
 			}
 			return new ResponseEntity<>(privilegeDtos, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		} 
 	}
-}
+

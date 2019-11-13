@@ -11,7 +11,7 @@ public class SecurityConstants {
 	public static final String LOGIN_URL = "/login";
 	public static final String PERMISSION = "permission";
 	public static final String USERSERVICEIMPL = "userServiceImpl";
-	public static final long EXPIRATION_TIME = 300_000;
+	public static final long EXPIRATION_TIME = 864000;
 	public static final String SECRET ="SecretKeyToGenJWTs";
 	//public static final String TOKEN_SECRET = "jf9i4jgu83nfl0";
 

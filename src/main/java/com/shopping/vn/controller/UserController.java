@@ -1,5 +1,6 @@
 package com.shopping.vn.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.vn.config.JwtTokenProvider;
 import com.shopping.vn.dto.MenuDto;
+import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.dto.UserDto;
 import com.shopping.vn.request.JWTLoginSucessReponse;
 import com.shopping.vn.request.UserLoginRequestModel;
@@ -103,5 +105,19 @@ public class UserController {
 	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
 		return new ResponseEntity<>(Constants.MESSENGER.DELETE_SUCCESS, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/read-all-user")
+	public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
+		
+			List<UserDto> readAll = userService.readAll(filter);
+			return new ResponseEntity<>(readAll, HttpStatus.OK);
+		
+		
+	}
+	@PostMapping(value="/detail-user")
+	public ResponseEntity<UserDto> getDetail(@RequestBody Long id){
+		UserDto user = userService.findById(id);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 }

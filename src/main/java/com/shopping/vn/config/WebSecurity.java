@@ -49,13 +49,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, SecurityConstants.LOGIN_URL).permitAll()
+				.antMatchers(HttpMethod.POST, Constants.User.SIGN_UP_URL).permitAll()
 				.antMatchers(HttpMethod.GET, Constants.User.DELETE_USER).permitAll().anyRequest().authenticated()
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override
-	@Transactional
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
