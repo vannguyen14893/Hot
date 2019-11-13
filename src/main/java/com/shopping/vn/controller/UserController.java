@@ -1,6 +1,5 @@
 package com.shopping.vn.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -109,14 +108,12 @@ public class UserController {
 
 	@PostMapping(value = "/read-all-user")
 	public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
-		
-			List<UserDto> readAll = userService.readAll(filter);
-			return new ResponseEntity<>(readAll, HttpStatus.OK);
-		
-		
+		List<UserDto> readAll = userService.readAll(filter);
+		return new ResponseEntity<>(readAll, HttpStatus.OK);
 	}
-	@PostMapping(value="/detail-user")
-	public ResponseEntity<UserDto> getDetail(@RequestBody Long id){
+
+	@PostMapping(value = "/detail-user")
+	public ResponseEntity<UserDto> getDetail(@RequestBody Long id) {
 		UserDto user = userService.findById(id);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}

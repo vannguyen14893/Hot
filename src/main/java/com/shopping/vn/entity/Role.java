@@ -1,7 +1,6 @@
 package com.shopping.vn.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;

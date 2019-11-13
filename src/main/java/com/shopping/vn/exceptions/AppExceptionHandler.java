@@ -27,6 +27,16 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler{
 		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorMessage,new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(value= {MenuServiceException.class})
+	public ResponseEntity<Object> handleMenuServiceException(MenuServiceException ex, WebRequest request) {
+		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorMessage,new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(value= {PrivilegeServiceException.class})
+	public ResponseEntity<Object> handlePrivilegeServiceException(PrivilegeServiceException ex, WebRequest request) {
+		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorMessage,new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
 	@ExceptionHandler(value= {Exception.class})
 	public ResponseEntity<Object> handleUserServiceExceptions(Exception ex, WebRequest request) {
 		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());

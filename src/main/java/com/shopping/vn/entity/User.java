@@ -64,6 +64,7 @@ public class User implements Serializable {
 		List<Role> roles = new ArrayList<>();
 		roles.add(role);
 		user.setRoles(roles);
+		
 		return user;
 	}
 	public static final User convertUpdate(UserDto userDto,User user,List<Role> roles) {

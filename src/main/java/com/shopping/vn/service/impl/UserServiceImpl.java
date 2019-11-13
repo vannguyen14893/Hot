@@ -6,17 +6,19 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shopping.vn.dto.HistoryDto;
 import com.shopping.vn.dto.MenuDto;
-import com.shopping.vn.dto.PrivilegeDto;
-import com.shopping.vn.dto.RoleDto;
 import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.dto.UserDto;
 import com.shopping.vn.entity.Privilege;
@@ -28,8 +30,10 @@ import com.shopping.vn.repository.MenuRepository;
 import com.shopping.vn.repository.PrivilegeRepository;
 import com.shopping.vn.repository.RoleRepository;
 import com.shopping.vn.repository.UserRepository;
+import com.shopping.vn.service.HistoryService;
 import com.shopping.vn.service.UserService;
 import com.shopping.vn.utils.Constants;
+import com.shopping.vn.utils.MailConstructor;
 
 @Service
 @Transactional
@@ -44,7 +48,12 @@ public class UserServiceImpl implements UserService {
 	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private RoleRepository roleRepository;
-
+	@Autowired
+	private HistoryService historyService;
+	@Autowired
+	private MailConstructor mailConstructor;
+	@Autowired
+	private JavaMailSender mailSender;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -97,7 +106,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return false;
-		
+
 	}
 
 	@Override
@@ -119,6 +128,9 @@ public class UserServiceImpl implements UserService {
 		if (role == null)
 			throw new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND);
 		userRepository.save(User.convertSave(userDto, role));
+		//Send mail after add new user
+		SimpleMailMessage email = mailConstructor.constructNewUserEmail(userDto, userDto.getPassword());
+		mailSender.send(email);
 	}
 
 	@Override
@@ -136,6 +148,13 @@ public class UserServiceImpl implements UserService {
 		User user = mapper.map(userDto, User.class);
 		user.setPassword(encoder.encode(userDto.getPassword()));
 		userRepository.save(user);
+		// save history
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		HistoryDto historyDto = new HistoryDto();
+		historyDto.setDescrition("add new user" + " " + userDto.getEmail());
+		historyService.historyAdd(historyDto, findUserByEmail);
+
 	}
 
 	@Override
@@ -148,8 +167,13 @@ public class UserServiceImpl implements UserService {
 					.orElseThrow(() -> new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND));
 			roles.add(role);
 		}
-
 		userRepository.save(User.convertUpdate(userDto, user, roles));
+		// save history
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		HistoryDto historyDto = new HistoryDto();
+		historyDto.setDescrition("update user" + " " + userDto.getEmail());
+		historyService.historyUpdate(historyDto, findUserByEmail);
 	}
 
 	@Override
@@ -159,6 +183,12 @@ public class UserServiceImpl implements UserService {
 		user.setStatus(1);
 		userRepository.save(user);
 
+		// save history
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		HistoryDto historyDto = new HistoryDto();
+		historyDto.setDescrition("delete user" + " " + user.getEmail());
+		historyService.historyDelete(historyDto, findUserByEmail);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.shopping.vn.entity;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
