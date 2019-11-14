@@ -8,12 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shopping.vn.dto.HistoryDto;
 import com.shopping.vn.dto.MenuDto;
 import com.shopping.vn.dto.PrivilegeDto;
 import com.shopping.vn.dto.RoleDto;
@@ -28,6 +30,7 @@ import com.shopping.vn.repository.MenuRepository;
 import com.shopping.vn.repository.PrivilegeRepository;
 import com.shopping.vn.repository.RoleRepository;
 import com.shopping.vn.repository.UserRepository;
+import com.shopping.vn.service.HistoryService;
 import com.shopping.vn.service.UserService;
 import com.shopping.vn.utils.Constants;
 
@@ -44,13 +47,16 @@ public class UserServiceImpl implements UserService {
 	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private RoleRepository roleRepository;
-
+	@Autowired
+	private ModelMapper mapper;
+    @Autowired
+    private HistoryService historyService;
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) {
 
 		User user = userRepository.findUserByEmail(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("not user");
+			throw new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND);
 		}
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true,
 				true, true, getAuthorities(user.getRoles()));
@@ -91,20 +97,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean checkPermission(String email, String permission) {
 		List<Object[]> privileges = privilegeRepository.readAllByUser(email);
-		for (Object object[] : privileges) {
+		for (Object[] object : privileges) {
 			if (object[0].toString().equals(permission)) {
 				return true;
 			}
 		}
 		return false;
-		
+
 	}
 
 	@Override
 	public List<MenuDto> menus(Long userId) {
 		List<Object[]> objects = menuRepository.readMenuByUser(userId);
 		List<MenuDto> menus = new ArrayList<>();
-		for (Object object[] : objects) {
+		for (Object[] object : objects) {
 			MenuDto menuDto = new MenuDto();
 			menuDto.setName(object[1].toString());
 			menuDto.setId(Long.parseLong(object[0].toString()));
@@ -127,15 +133,22 @@ public class UserServiceImpl implements UserService {
 		if (user != null) {
 			return false;
 		}
+
 		return true;
 	}
 
 	@Override
 	public void addUser(UserDto userDto) {
-		ModelMapper mapper = new ModelMapper();
 		User user = mapper.map(userDto, User.class);
 		user.setPassword(encoder.encode(userDto.getPassword()));
 		userRepository.save(user);
+		// save history
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		HistoryDto historyDto = new HistoryDto();
+		historyDto.setDescrition("add new user" + " " + userDto.getEmail());
+		historyService.historyAdd(historyDto, findUserByEmail);
+
 	}
 
 	@Override
@@ -148,8 +161,13 @@ public class UserServiceImpl implements UserService {
 					.orElseThrow(() -> new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND));
 			roles.add(role);
 		}
-
 		userRepository.save(User.convertUpdate(userDto, user, roles));
+		// save history
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		HistoryDto historyDto = new HistoryDto();
+		historyDto.setDescrition("update user" + " " + userDto.getEmail());
+		historyService.historyUpdate(historyDto, findUserByEmail);
 	}
 
 	@Override
@@ -159,7 +177,14 @@ public class UserServiceImpl implements UserService {
 		user.setStatus(1);
 		userRepository.save(user);
 
+		// save history
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		HistoryDto historyDto = new HistoryDto();
+		historyDto.setDescrition("delete user" + " " + user.getEmail());
+		historyService.historyDelete(historyDto, findUserByEmail);
 	}
+
 
 	@Override
 	public List<UserDto> readAll(SortFilterDto filter) {

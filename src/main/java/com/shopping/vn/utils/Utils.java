@@ -21,4 +21,8 @@ public class Utils {
 
 		return dateStr;
 	}
+
+	private Utils() {
+
+	}
 }

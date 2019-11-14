@@ -1,5 +1,6 @@
 package com.shopping.vn;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +27,8 @@ public class ShoppingApplication {
 	public AppProperties getAppProperties() {
 		return new AppProperties();
 	}
-//	@Bean
-//	public ResourceSupport resourceSupport() {
-//		return new ResourceSupport();
-//	}
+    @Bean
+    public ModelMapper modelMapper() {
+    	return new ModelMapper();
+    }
 }

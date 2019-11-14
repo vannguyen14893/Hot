@@ -1,6 +1,5 @@
 package com.shopping.vn.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -30,9 +29,17 @@ import com.shopping.vn.service.MapValidationErrorService;
 import com.shopping.vn.service.UserService;
 import com.shopping.vn.utils.Constants;
 import com.shopping.vn.utils.SecurityConstants;
+import com.shopping.vn.utils.ServiceStatus;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@Api(value = "User Management System", description = "Operations pertaining to user in User Management System")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -43,9 +50,13 @@ public class UserController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved list"),
+			@ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@PostMapping(value = SecurityConstants.LOGIN_URL)
 	public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequestModel login, BindingResult result) {
-		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
 		Authentication authentication = authenticationManager
@@ -62,7 +73,7 @@ public class UserController {
 	public ResponseEntity<?> readMenuByUser(@PathVariable("userId") Long userId) {
 		List<MenuDto> menus = userService.menus(userId);
 		if (CollectionUtils.isEmpty(menus)) {
-			return new ResponseEntity<>(Constants.MESSENGER.NO_DATA, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(ServiceStatus.NO_DATA, HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(menus, HttpStatus.OK);
 	}
@@ -70,53 +81,55 @@ public class UserController {
 	@PostMapping(value = Constants.User.SIGN_UP_URL)
 	public ResponseEntity<?> resgistrationUser(@RequestBody UserDto userDto) {
 		userService.registrationUser(userDto);
-		return new ResponseEntity<>(Constants.MESSENGER.SIGN_UP_URL, HttpStatus.OK);
+		return new ResponseEntity<>(ServiceStatus.SIGN_UP_URL, HttpStatus.OK);
 
 	}
 
 	@PostMapping(value = Constants.User.CHECK_EMAIL_DONOT_EXIST)
 	public ResponseEntity<?> checkEmailDonotExit(@Valid @RequestBody UserDto userDto, BindingResult result) {
-		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
 		if (!userService.checkEmailDoNotExit(userDto.getEmail())) {
-			return new ResponseEntity<>(Constants.MESSENGER.VALUE_DONOT_EXIST, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(ServiceStatus.VALUE_DONOT_EXIST, HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<>(Constants.MESSENGER.VALUE_CAN_USE, HttpStatus.OK);
+		return new ResponseEntity<>(ServiceStatus.VALUE_CAN_USE, HttpStatus.OK);
 	}
 
 	@PostMapping(value = Constants.User.ADD_USER)
 	public ResponseEntity<?> addUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
-		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
 		if (errorMap != null)
 			return errorMap;
 		userService.addUser(userDto);
-		return new ResponseEntity<>(Constants.MESSENGER.ADD_SUCCESS, HttpStatus.OK);
+		return new ResponseEntity<>(ServiceStatus.ADD_SUCCESS, HttpStatus.OK);
 	}
 
 	@PostMapping(value = Constants.User.UPDATE_USER)
 	public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
 
 		userService.updateUser(userDto);
-		return new ResponseEntity<>(Constants.MESSENGER.UPDATE_SUCCESS, HttpStatus.OK);
+		return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
 	}
 
 	@GetMapping(value = Constants.User.DELETE_USER)
-	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<ServiceStatus> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
-		return new ResponseEntity<>(Constants.MESSENGER.DELETE_SUCCESS, HttpStatus.OK);
+		return new ResponseEntity<>(ServiceStatus.DELETE_SUCCESS, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/read-all-user")
+	@ApiOperation(value = "View a list of available user", response = List.class)
 	public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
-		
-			List<UserDto> readAll = userService.readAll(filter);
-			return new ResponseEntity<>(readAll, HttpStatus.OK);
-		
-		
+
+		List<UserDto> readAll = userService.readAll(filter);
+		return new ResponseEntity<>(readAll, HttpStatus.OK);
+
 	}
-	@PostMapping(value="/detail-user")
-	public ResponseEntity<UserDto> getDetail(@RequestBody Long id){
+	@ApiOperation(value = "get detail user")
+	@PostMapping(value = "/detail-user")
+	public ResponseEntity<UserDto> getDetail(
+			@ApiParam(value = "User object store in database table", required = true) @RequestBody Long id) {
 		UserDto user = userService.findById(id);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}

@@ -13,23 +13,41 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.shopping.vn.response.ErrorMessages;
 
-
 @ControllerAdvice
 @RestController
-public class AppExceptionHandler extends ResponseEntityExceptionHandler{
-	@ExceptionHandler(value= {UserServiceException.class})
+public class AppExceptionHandler extends ResponseEntityExceptionHandler {
+	@ExceptionHandler(value = { UserServiceException.class })
 	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
-		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());
-		return new ResponseEntity<>(errorMessage,new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		ErrorMessages errorMessage = new ErrorMessages(LocalDateTime.now(), ex.getMessage(),
+				HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
-	@ExceptionHandler(value= {RoleServiceException.class})
+
+	@ExceptionHandler(value = { RoleServiceException.class })
 	public ResponseEntity<Object> handleRoleServiceException(RoleServiceException ex, WebRequest request) {
-		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());
-		return new ResponseEntity<>(errorMessage,new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		ErrorMessages errorMessage = new ErrorMessages(LocalDateTime.now(), ex.getMessage(),
+				HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
-	@ExceptionHandler(value= {Exception.class})
+
+	@ExceptionHandler(value = { MenuServiceException.class })
+	public ResponseEntity<Object> handleMenuServiceException(MenuServiceException ex, WebRequest request) {
+		ErrorMessages errorMessage = new ErrorMessages(LocalDateTime.now(), ex.getMessage(),
+				HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(value = { PrivilegeServiceException.class })
+	public ResponseEntity<Object> handlePrivilegeServiceException(PrivilegeServiceException ex, WebRequest request) {
+		ErrorMessages errorMessage = new ErrorMessages(LocalDateTime.now(), ex.getMessage(),
+				HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(value = { Exception.class })
 	public ResponseEntity<Object> handleUserServiceExceptions(Exception ex, WebRequest request) {
-		ErrorMessages errorMessage=new ErrorMessages(LocalDateTime.now(),ex.getMessage(),HttpStatus.BAD_REQUEST.value());
+		ErrorMessages errorMessage = new ErrorMessages(LocalDateTime.now(), ex.getMessage(),
+				HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

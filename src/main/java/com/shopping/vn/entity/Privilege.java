@@ -1,6 +1,6 @@
 package com.shopping.vn.entity;
 
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,14 +12,19 @@ import javax.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Privilege {
+@ToString
+public class Privilege implements Serializable{
+	
+	private static final long serialVersionUID = -5698927292791644044L;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;

@@ -1,6 +1,6 @@
 package com.shopping.vn.entity;
 
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,14 +14,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Menu {
+@ToString
+public class Menu implements Serializable{
+	
+	private static final long serialVersionUID = 7713817943479804772L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	@JsonIgnore

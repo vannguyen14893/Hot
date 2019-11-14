@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 
 import com.shopping.vn.dto.MenuDto;
 import com.shopping.vn.entity.Menu;
@@ -19,12 +18,13 @@ import com.shopping.vn.service.MenuService;
 public class MenuServiceImpl implements MenuService {
 	@Autowired
 	private MenuRepository menuRepository;
+	@Autowired
+	private ModelMapper mapper;
 
 	@Override
 	public List<MenuDto> readAll() {
 		List<Menu> menus = menuRepository.readAllbyParent();
-		ModelMapper mapper = new ModelMapper();
-		List<MenuDto> menuDtos = new ArrayList<MenuDto>();
+		List<MenuDto> menuDtos = new ArrayList<>();
 		for (Menu menu : menus) {
 			MenuDto menuParent = mapper.map(menu, MenuDto.class);
 			List<Menu> menuChilds = menuRepository.readAllByMenuId(menu.getId());
