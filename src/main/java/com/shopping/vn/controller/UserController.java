@@ -121,11 +121,11 @@ public class UserController {
 	@PostMapping(value = "/read-all-user")
 	@ApiOperation(value = "View a list of available user", response = List.class)
 	public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
-
 		List<UserDto> readAll = userService.readAll(filter);
 		return new ResponseEntity<>(readAll, HttpStatus.OK);
 
 	}
+
 	@ApiOperation(value = "get detail user")
 	@PostMapping(value = "/detail-user")
 	public ResponseEntity<UserDto> getDetail(

@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PrivilegeServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = 6434390107531729321L;
-	
+
 	public PrivilegeServiceException(String message) {
 		super(message);
-		
+
 	}
 
-	
 }

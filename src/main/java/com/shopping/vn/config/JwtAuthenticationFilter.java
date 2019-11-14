@@ -35,7 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	UserService userService;
 
-	String permission="";
+	String permission = "";
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			FilterChain filterChain) throws ServletException, IOException {
@@ -52,8 +53,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
-				
-//			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+			// Object principal =
+			// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 //			if (!userService.checkPermission(principal.toString(), permission)) {
 //				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);	
 //				return;
@@ -68,7 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private String getJWTFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader(SecurityConstants.HEADER_STRING);
-		 permission = request.getHeader("Permission");
+		permission = request.getHeader("Permission");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 			return bearerToken.substring(7, bearerToken.length());
 		}
