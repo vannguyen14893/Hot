@@ -1,17 +1,16 @@
 package com.shopping.vn.service;
 
 import java.util.List;
-
 import com.shopping.vn.dto.RoleDto;
 
 public interface RoleService {
-	List<RoleDto> readAll();
+  List<RoleDto> readAll();
 
-	RoleDto detailRole(Long id);
+  RoleDto detailRole(Long id);
 
-	void addRole(RoleDto roleDto);
+  void addRole(RoleDto roleDto);
 
-	void updateRole(RoleDto roleDto);
+  void updateRole(RoleDto roleDto);
 
-	void deleteRole(Long id);
+  void deleteRole(Long id);
 }

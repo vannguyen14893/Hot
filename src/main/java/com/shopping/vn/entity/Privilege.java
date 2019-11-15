@@ -2,15 +2,12 @@ package com.shopping.vn.entity;
 
 
 import java.io.Serializable;
-
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,17 +18,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @ToString
-public class Privilege implements Serializable{
-	
-	private static final long serialVersionUID = -5698927292791644044L;
+public class Privilege implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+  private static final long serialVersionUID = -5698927292791644044L;
 
-	private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-	@ManyToMany(mappedBy = "privileges")
-	private List<Role> roles;
+  private String name;
+
+  @ManyToMany(mappedBy = "privileges")
+  private List<Role> roles;
 
 }

@@ -11,8 +11,8 @@ import com.shopping.vn.config.AppProperties;
 @SpringBootApplication
 public class ShoppingApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ShoppingApplication.class, args);
+  public static void main(String[] args) {
+    SpringApplication.run(ShoppingApplication.class, args);
 	}
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -31,4 +31,5 @@ public class ShoppingApplication {
     public ModelMapper modelMapper() {
     	return new ModelMapper();
     }
+    
 }

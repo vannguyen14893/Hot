@@ -10,7 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class JWTLoginSucessReponse {
-	private boolean success;
-	private String token;
+  private boolean success;
+  private String token;
 
 }
