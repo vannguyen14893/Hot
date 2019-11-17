@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.shopping.vn.entity.User;
-import com.shopping.vn.exceptions.UserServiceException;
+import com.shopping.vn.exceptions.RuntimeExceptionHandling;
 import com.shopping.vn.repository.UserRepository;
 import com.shopping.vn.service.UserService;
 import com.shopping.vn.utils.SecurityConstants;
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
         Long userId = tokenProvider.getUserIdFromJWT(jwt);
         User userDetails = userRepository.findById(userId)
-            .orElseThrow(() -> new UserServiceException("user not found " + userId));
+            .orElseThrow(() -> new RuntimeExceptionHandling("user not found " + userId));
 
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(userDetails.getEmail(),

@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,5 +25,18 @@ public class Utils {
 
   private Utils() {
 
+  }
+  public static final String generateCollection(List<?> list) {
+    if (list == null || list.isEmpty())
+      return "()";
+    String result = "( ";
+    for (Iterator<?> it = list.iterator(); it.hasNext();) {
+      Object ob = it.next();
+      result += ob.toString();
+      if (it.hasNext())
+        result += " , ";
+    }
+    result += " )";
+    return result;
   }
 }

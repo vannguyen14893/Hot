@@ -5,27 +5,27 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.entity.User;
 import com.shopping.vn.repository.customer.UserRepositoryCustomer;
+import com.shopping.vn.utils.Utils;
 
 public class UserRepositoryCustomerImpl implements UserRepositoryCustomer {
   @PersistenceContext
   EntityManager entityManager;
-  public static final String LIST = "select u from User u ";
+  public static final String LIST = "select u from User u join u.roles r ";
   public static final String SORT = " ORDER BY ";
 
   @SuppressWarnings("unchecked")
   @Override
   public List<User> readAll(SortFilterDto filter) {
     StringBuilder builder = new StringBuilder(LIST);
-    if (filter.getRoleId() != null) {
-      builder.append("join u.roles r ");
-    }
+
     builder.append(" WHERE 1=1 ");
 
-    if (filter.getRoleId() != null) {
-      builder.append(" AND r.roleId = '" + filter.getRoleId() + "' ");
+    if (!CollectionUtils.isEmpty(filter.getRoleIds())) {
+      builder.append(" AND r.roleId in " + Utils.generateCollection(filter.getRoleIds()));
     }
 
     if (filter.getStatus() != null) {

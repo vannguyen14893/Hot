@@ -1,19 +1,21 @@
 package com.shopping.vn.dto;
 
-import com.shopping.vn.entity.ProductColor;
+import com.shopping.vn.entity.SizeColor;
 import lombok.Data;
 
 @Data
-public class ProductColorDto {
+public class SizeColorDto {
   private Long id;
   private String nameColor;
   private Integer number;
-
-  public static final ProductColorDto convert(ProductColor productColor) {
-    ProductColorDto productColorDto = new ProductColorDto();
+  private ColorDto colorDto;
+  private SizeDto sizeDto;
+  public static final SizeColorDto convert(SizeColor productColor) {
+    SizeColorDto productColorDto = new SizeColorDto();
     productColorDto.setId(productColor.getId());
     productColorDto.setNumber(productColor.getNumber());
     productColorDto.setNameColor(productColor.getColor().getName());
     return productColorDto;
   }
+  
 }

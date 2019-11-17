@@ -11,14 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "color")
 public class Color implements Serializable{
@@ -31,5 +30,5 @@ public class Color implements Serializable{
   @JsonIgnore
   @OneToMany(mappedBy = "color", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
   orphanRemoval = true)
-private List<ProductColor> productColors;
+private List<SizeColor> productColors;
 }

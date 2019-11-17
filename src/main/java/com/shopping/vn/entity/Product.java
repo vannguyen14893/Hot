@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,8 +22,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
@@ -41,18 +42,13 @@ public class Product implements Serializable {
   private Integer number;
   private Integer status;
   private Integer vote;
+  @Column(columnDefinition = "text")
   private String description;
   @ManyToOne
   @JoinColumn(name = "category_id")
   private Category category;
 
-  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      orphanRemoval = true)
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<ProductSize> productSizes;
-  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      orphanRemoval = true)
-  private List<ProductColor> productColors;
-
-
 
 }

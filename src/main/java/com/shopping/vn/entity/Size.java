@@ -17,8 +17,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "size")
 public class Size implements Serializable{
@@ -32,4 +32,7 @@ public class Size implements Serializable{
   @OneToMany(mappedBy = "size", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
       orphanRemoval = true)
   private List<ProductSize> productSizes;
+  @JsonIgnore
+  @OneToMany(mappedBy = "size", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<SizeColor> sizeColors;
 }

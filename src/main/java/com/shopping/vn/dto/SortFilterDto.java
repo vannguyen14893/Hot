@@ -35,10 +35,11 @@ public class SortFilterDto {
   private List<Long> sizeIds;
   private List<Long> colorIds;
   private List<BigDecimal> price;
-  private List<BigDecimal> priceSale;
+  private List<BigDecimal> priceSales;
   private List<String> location;
   private List<Integer> votes;
   private List<String> stocks;
   private String title;
+  private List<Long> roleIds;
   
 }

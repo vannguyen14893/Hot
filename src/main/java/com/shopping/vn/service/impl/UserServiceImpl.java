@@ -21,8 +21,7 @@ import com.shopping.vn.dto.UserDto;
 import com.shopping.vn.entity.Privilege;
 import com.shopping.vn.entity.Role;
 import com.shopping.vn.entity.User;
-import com.shopping.vn.exceptions.RoleServiceException;
-import com.shopping.vn.exceptions.UserServiceException;
+import com.shopping.vn.exceptions.RuntimeExceptionHandling;
 import com.shopping.vn.repository.MenuRepository;
 import com.shopping.vn.repository.PrivilegeRepository;
 import com.shopping.vn.repository.RoleRepository;
@@ -60,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     User user = userRepository.findUserByEmail(username);
     if (user == null) {
-      throw new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND);
+      throw new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND);
     }
     return new org.springframework.security.core.userdetails.User(user.getEmail(),
         user.getPassword(), true, true, true, true, getAuthorities(user.getRoles()));
@@ -127,7 +126,7 @@ public class UserServiceImpl implements UserService {
   public void registrationUser(UserDto userDto) {
     Role role = roleRepository.findRoleByRoleName("ROLE_USER");
     if (role == null)
-      throw new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND);
+      throw new RuntimeExceptionHandling(Constants.MESSENGER.ROLE_NOT_FOUND);
     userRepository.save(User.convertSave(userDto, role));
     // Send mail after add new user
     SimpleMailMessage email = mailConstructor.constructNewUserEmail(userDto, userDto.getPassword());
@@ -161,11 +160,11 @@ public class UserServiceImpl implements UserService {
   @Override
   public void updateUser(UserDto userDto) {
     User user = userRepository.findById(userDto.getId())
-        .orElseThrow(() -> new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND));
     List<Role> roles = new ArrayList<>();
     for (Long id : userDto.getRoleIds()) {
       Role role = roleRepository.findById(id).orElseThrow(
-          () -> new RoleServiceException(Constants.MESSENGER.ROLE_NOT_FOUND + " " + id));
+          () -> new RuntimeExceptionHandling(Constants.MESSENGER.ROLE_NOT_FOUND + " " + id));
       roles.add(role);
     }
     userRepository.save(User.convertUpdate(userDto, user, roles));
@@ -180,7 +179,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void deleteUser(Long id) {
     User user = userRepository.findById(id)
-        .orElseThrow(() -> new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
     user.setStatus(1);
     userRepository.save(user);
 
@@ -206,7 +205,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto findById(Long id) {
     User user = userRepository.findById(id)
-        .orElseThrow(() -> new UserServiceException(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
     return UserDto.convertUser(user);
   }
 
