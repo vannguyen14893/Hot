@@ -35,7 +35,7 @@ public class UserDto {
   private List<RoleDto> roles;
   @ApiModelProperty("roleId of user")
   private List<Long> roleIds;
-
+  private ShoppingCartDto shoppingCartDto;
   public static final UserDto convertUser(User user) {
     UserDto userDto = new UserDto();
     userDto.setId(user.getId());
