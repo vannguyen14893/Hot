@@ -25,5 +25,11 @@ public class Constants {
     public static final String NO_DATA = "No data";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String ROLE_NOT_FOUND = "Role not found";
+    public static final String PRODUCT_NOT_FOUND = "Product not found";
+    public static final String COLOR_NOT_FOUND = "Color not found";
+    public static final String SIZE_NOT_FOUND = "Size not found";
+    public static final String CATEGORY_NOT_FOUND = "Category not found";
+    public static final String PRODUCT_SIZE_NOT_FOUND = "ProductSize not found";
+    public static final String SIZE_COLOR_NOT_FOUND = "SizeColor not found";
   }
 }

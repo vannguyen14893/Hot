@@ -25,6 +25,7 @@ import com.shopping.vn.repository.ProductSizeRepository;
 import com.shopping.vn.repository.SizeColorRepository;
 import com.shopping.vn.repository.SizeRepository;
 import com.shopping.vn.service.ProductService;
+import com.shopping.vn.utils.Constants;
 
 @Service
 @Transactional
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  @Transactional()
+  @Transactional
   public Product createProduct(ProductDto productDto) {
     Product product = new Product();
     Integer sum = 0;
@@ -62,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     List<Integer> total = new ArrayList<>();
     List<Integer> totalProduct = new ArrayList<>();
     Category category = categoryRepository.findById(productDto.getCategory().getId())
-        .orElseThrow(() -> new RuntimeExceptionHandling("Category not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.CATEGORY_NOT_FOUND));
     product.setDescription(productDto.getDescription());
     product.setName(productDto.getName());
     product.setLocation(productDto.getLocation());
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
       ProductSize productSize = new ProductSize();
       productSize.setNumber(productSizeDto.getNumber());
       size = sizeRepository.findById(productSizeDto.getSizeDto().getId())
-          .orElseThrow(() -> new RuntimeExceptionHandling("Size not found"));
+          .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.SIZE_NOT_FOUND));
       sizeDto = productSizeDto.getSizeDto();
       productSize.setSize(size);
       productSize.setProduct(product);
@@ -89,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         sum = total.stream().mapToInt(Integer::intValue).sum();
         sizeColor.setSize(size);
         Color color = colorRepository.findById(sizeColorDto.getColorDto().getId())
-            .orElseThrow(() -> new RuntimeExceptionHandling("Color not found"));
+            .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.COLOR_NOT_FOUND));
         sizeColor.setColor(color);
         sizeColorRepository.save(sizeColor);
       }
@@ -107,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public BigDecimal updatePriceSale(Long id, BigDecimal priceSale) {
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeExceptionHandling("Product not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.PRODUCT_NOT_FOUND));
     product.setPriceSale(priceSale);
     productRepository.save(product);
     return priceSale;
@@ -116,7 +117,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public ProductDto detailProductDto(Long id) {
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeExceptionHandling("Product not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.PRODUCT_NOT_FOUND));
 
     return ProductDto.convert(product);
   }
@@ -126,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
     for (Long id : ids) {
       Product product = productRepository.getProductByID(id);
       if (product == null)
-        throw new RuntimeExceptionHandling("Product not found");
+        throw new RuntimeExceptionHandling(Constants.MESSENGER.PRODUCT_NOT_FOUND);
       product.setStatus(0);
       productRepository.save(product);
     }
@@ -136,13 +137,13 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public Product updateProduct(ProductDto productDto) {
     Product product = productRepository.findById(productDto.getId())
-        .orElseThrow(() -> new RuntimeExceptionHandling("Product not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.PRODUCT_NOT_FOUND));
     Integer sum = 0;
     Integer sumProduct = 0;
     List<Integer> total = new ArrayList<>();
     List<Integer> totalProduct = new ArrayList<>();
     Category category = categoryRepository.findById(productDto.getCategory().getId())
-        .orElseThrow(() -> new RuntimeExceptionHandling("Category not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.CATEGORY_NOT_FOUND));
     product.setId(productDto.getId());
     product.setDescription(productDto.getDescription());
     product.setName(productDto.getName());
@@ -158,25 +159,25 @@ public class ProductServiceImpl implements ProductService {
     product.getProductSizes().clear();
     for (ProductSizeDto productSizeDto : productDto.getProductSizeDtos()) {
       ProductSize productSize = productSizeRepository.findById(productSizeDto.getId())
-          .orElseThrow(() -> new RuntimeExceptionHandling("ProductSize not found"));
+          .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.PRODUCT_SIZE_NOT_FOUND));
       productSize.setId(productSizeDto.getId());
       productSize.setNumber(productSizeDto.getNumber());
       size = sizeRepository.findById(productSizeDto.getSizeDto().getId())
-          .orElseThrow(() -> new RuntimeExceptionHandling("Size not found"));
+          .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.SIZE_NOT_FOUND));
       sizeDto = productSizeDto.getSizeDto();
       productSize.setSize(size);
       productSize.setProduct(product);
       size.getSizeColors().clear();
       for (SizeColorDto sizeColorDto : sizeDto.getSizeColorDtos()) {
         SizeColor sizeColor = sizeColorRepository.findById(sizeColorDto.getId())
-            .orElseThrow(() -> new RuntimeExceptionHandling("SizeColor not found"));
+            .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.SIZE_COLOR_NOT_FOUND));
         sizeColor.setId(sizeColorDto.getId());
         sizeColor.setNumber(sizeColorDto.getNumber());
         total.add(sizeColorDto.getNumber());
         sum = total.stream().mapToInt(Integer::intValue).sum();
         sizeColor.setSize(size);
         Color color = colorRepository.findById(sizeColorDto.getColorDto().getId())
-            .orElseThrow(() -> new RuntimeExceptionHandling("Color not found"));
+            .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.COLOR_NOT_FOUND));
         sizeColor.setColor(color);
         sizeColorRepository.save(sizeColor);
       }
