@@ -43,6 +43,4 @@ public class CartItem implements Serializable {
   @JsonIgnore
   private Order order;
 
-
-
 }

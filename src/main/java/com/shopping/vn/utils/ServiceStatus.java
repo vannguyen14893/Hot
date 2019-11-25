@@ -14,8 +14,9 @@ public enum ServiceStatus implements Serializable {
   VALUE_CAN_USE(6, "Value can use",400),
   NO_DATA(7, "No data", 400),
   USER_NOT_FOUND(8, "User not found",400),
-  ROLE_NOT_FOUND(9, "Role not found", 400);
-
+  ROLE_NOT_FOUND(9, "Role not found", 400),
+  UPLOAD_SUCCESS(10, "Create success", 200),
+  UPLOAD_FALSE(11, "Upload false", 400);
   private int id;
 
   private String message;

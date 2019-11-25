@@ -80,5 +80,5 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         "/configuration/security", "/swagger-ui.html", "/webjars/**");
 
   }
-
+  
 }

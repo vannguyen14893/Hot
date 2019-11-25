@@ -18,4 +18,6 @@ public interface ProductService {
   Boolean deleteProduct(List<Long> ids);
   
   Product updateProduct(ProductDto productDto);
+  
+ 
 }

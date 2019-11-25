@@ -18,9 +18,10 @@ public class ShoppingCartController {
   @Autowired
   private CartItemService cartItemService;
 
-  @PostMapping(value="/add/{qty}")
-  public ResponseEntity<?> addCartItem(@PathVariable("qty") Integer qty,@RequestBody ProductDto productDto) {
+  @PostMapping(value = "/add/{qty}")
+  public ResponseEntity<ServiceStatus> addCartItem(@PathVariable("qty") Integer qty,
+      @RequestBody ProductDto productDto) {
     cartItemService.addBookToCartItem(productDto, qty);
-    return new ResponseEntity<>(ServiceStatus.ADD_SUCCESS,HttpStatus.OK);
+    return new ResponseEntity<>(ServiceStatus.ADD_SUCCESS, HttpStatus.OK);
   }
 }

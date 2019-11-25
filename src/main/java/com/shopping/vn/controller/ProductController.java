@@ -24,55 +24,55 @@ import com.shopping.vn.utils.ServiceStatus;
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
-  @Autowired
-  private ProductService productService;
-  @Autowired
-  private MapValidationErrorService mapValidationErrorService;
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private MapValidationErrorService mapValidationErrorService;
 
-  @PostMapping(value = "/list-product")
-  public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
-    List<ProductDto> productDtos = productService.readAll(filter);
-    if (productDtos.isEmpty()) {
-      return new ResponseEntity<>(ServiceStatus.NO_DATA, HttpStatus.OK);
-    }
-    return new ResponseEntity<>(productDtos, HttpStatus.OK);
-  }
+	@PostMapping(value = "/list-product")
+	public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
+		List<ProductDto> productDtos = productService.readAll(filter);
+		if (productDtos.isEmpty()) {
+			return new ResponseEntity<>(ServiceStatus.NO_DATA, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(productDtos, HttpStatus.OK);
+	}
 
-  @PostMapping(value = "/add-product")
-  public ResponseEntity<?> create(@Valid @RequestBody ProductDto productDto, BindingResult result) {
-    ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
-    if (errorMap != null)
-      return errorMap;
-    productService.createProduct(productDto);
-    return new ResponseEntity<>(ServiceStatus.ADD_SUCCESS, HttpStatus.CREATED);
-  }
+	@PostMapping(value = "/add-product")
+	public ResponseEntity<?> create(@Valid @RequestBody ProductDto productDto, BindingResult result) {
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		productService.createProduct(productDto);
+		return new ResponseEntity<>(ServiceStatus.ADD_SUCCESS, HttpStatus.CREATED);
+	}
 
-  @PostMapping(value = "/delete-product")
-  public ResponseEntity<?> deleteProduct(@RequestBody List<Long> ids) {
-    if (CollectionUtils.isEmpty(ids))
-      throw new RuntimeExceptionHandling("No data");
-    productService.deleteProduct(ids);
-    return new ResponseEntity<>(ServiceStatus.DELETE_SUCCESS, HttpStatus.OK);
-  }
+	@PostMapping(value = "/delete-product")
+	public ResponseEntity<?> deleteProduct(@RequestBody List<Long> ids) {
+		if (CollectionUtils.isEmpty(ids))
+			throw new RuntimeExceptionHandling("No data");
+		productService.deleteProduct(ids);
+		return new ResponseEntity<>(ServiceStatus.DELETE_SUCCESS, HttpStatus.OK);
+	}
 
-  @PostMapping(value = "/detail-product/{id}")
-  public ResponseEntity<ProductDto> detailProduct(@PathVariable Long id) {
-    ProductDto detailProductDto = productService.detailProductDto(id);
-    return new ResponseEntity<>(detailProductDto, HttpStatus.OK);
-  }
+	@PostMapping(value = "/detail-product/{id}")
+	public ResponseEntity<ProductDto> detailProduct(@PathVariable Long id) {
+		ProductDto detailProductDto = productService.detailProductDto(id);
+		return new ResponseEntity<>(detailProductDto, HttpStatus.OK);
+	}
 
-  @PutMapping(value = "/update-price/{id}")
-  public ResponseEntity<?> updateSalePrice(@PathVariable Long id,
-      @RequestBody BigDecimal priceSale) {
-    productService.updatePriceSale(id, priceSale);
-    return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
-  }
-  @PutMapping(value = "/update-product")
-  public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDto productDto, BindingResult result){
-    ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
-    if (errorMap != null)
-      return errorMap;
-    productService.updateProduct(productDto);
-    return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
-  }
+	@PutMapping(value = "/update-price/{id}")
+	public ResponseEntity<?> updateSalePrice(@PathVariable Long id, @RequestBody BigDecimal priceSale) {
+		productService.updatePriceSale(id, priceSale);
+		return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
+	}
+
+	@PutMapping(value = "/update-product")
+	public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDto productDto, BindingResult result) {
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
+		if (errorMap != null)
+			return errorMap;
+		productService.updateProduct(productDto);
+		return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
+	}
 }

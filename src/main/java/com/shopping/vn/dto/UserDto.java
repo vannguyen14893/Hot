@@ -36,6 +36,7 @@ public class UserDto {
   @ApiModelProperty("roleId of user")
   private List<Long> roleIds;
   private ShoppingCartDto shoppingCartDto;
+  private String avatar;
   public static final UserDto convertUser(User user) {
     UserDto userDto = new UserDto();
     userDto.setId(user.getId());
@@ -43,6 +44,8 @@ public class UserDto {
     userDto.setEmail(user.getEmail());
     userDto.setMobile(user.getMobile());
     userDto.setStatus(user.getStatus());
+    userDto.setAvatar(user.getAvatar());
+    userDto.setBirthDay(user.getBirthDay());
     List<Role> roles = user.getRoles();
     List<RoleDto> roleDtos = new ArrayList<>();
     for (Role role : roles) {

@@ -17,17 +17,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.shopping.vn.dto.UserDto;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
@@ -43,6 +41,7 @@ public class User implements Serializable {
   private String mobile;
   private int status;
   private Date birthDay;
+  private String avatar;
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "users_roles",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -63,10 +62,11 @@ public class User implements Serializable {
     user.setMobile(userDto.getMobile());
     user.setPassword(encoder.encode(userDto.getPassword()));
     user.setStatus(userDto.getStatus());
+    user.setAvatar(userDto.getAvatar());
+    
     List<Role> roles = new ArrayList<>();
     roles.add(role);
     user.setRoles(roles);
-
     return user;
   }
 
@@ -79,6 +79,7 @@ public class User implements Serializable {
     user.setMobile(userDto.getMobile());
     user.setPassword(encoder.encode(userDto.getPassword()));
     user.setStatus(userDto.getStatus());
+    user.setAvatar(userDto.getAvatar());
     user.setRoles(roles);
     return user;
   }
