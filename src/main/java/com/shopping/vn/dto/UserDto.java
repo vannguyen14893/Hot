@@ -38,6 +38,7 @@ public class UserDto {
   private ShoppingCartDto shoppingCartDto;
   private String avatar;
   public static final UserDto convertUser(User user) {
+   
     UserDto userDto = new UserDto();
     userDto.setId(user.getId());
     userDto.setFullName(user.getFullName());

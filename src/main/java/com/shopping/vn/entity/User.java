@@ -1,6 +1,7 @@
 package com.shopping.vn.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.shopping.vn.dto.ShoppingCartDto;
 import com.shopping.vn.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,7 +57,9 @@ public class User implements Serializable {
 
   public static final User convertSave(UserDto userDto, Role role) {
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    BigDecimal cartTotal = new BigDecimal(0);
     User user = new User();
+    ShoppingCart shoppingCart=new ShoppingCart();
     user.setEmail(userDto.getEmail());
     user.setBirthDay(userDto.getBirthDay());
     user.setFullName(userDto.getFullName());
@@ -63,10 +67,12 @@ public class User implements Serializable {
     user.setPassword(encoder.encode(userDto.getPassword()));
     user.setStatus(userDto.getStatus());
     user.setAvatar(userDto.getAvatar());
-    
+    user.setShoppingCart(shoppingCart);
     List<Role> roles = new ArrayList<>();
     roles.add(role);
     user.setRoles(roles);
+    shoppingCart.setGrandTotal(cartTotal);
+    shoppingCart.setUser(user);
     return user;
   }
 

@@ -18,8 +18,8 @@ public class UploadFileServiceImpl implements UploadFileService {
 
 	@Override
 	public LinkedList<String> uploadImage(List<MultipartFile> listMultipartFile, String path) {
-		if (!new File(parentPath + path).exists()) {
-			new File(parentPath + path).mkdirs();
+		if (!new File("src/main/resources/static/image/product/" + path).exists()) {
+			new File("src/main/resources/static/image/product/" + path).mkdirs();
 		}
 		LinkedList<String> messages = new LinkedList<>();
 		for (MultipartFile file : listMultipartFile) {

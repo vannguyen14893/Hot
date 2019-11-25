@@ -42,6 +42,7 @@ public class Product implements Serializable {
   private Integer number;
   private Integer status;
   private Integer vote;
+  private int stockNumber;
   @ElementCollection
   private List<String> images;
   @Column(columnDefinition = "text")
@@ -49,7 +50,7 @@ public class Product implements Serializable {
   @ManyToOne
   @JoinColumn(name = "category_id")
   private Category category;
-
+  
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<ProductSize> productSizes;
  
