@@ -69,7 +69,8 @@ public class ShoppingCartController {
   public ResponseEntity<?> updateCartItem(@RequestBody HashMap<String, String> mapper) {
     String cartItemId = mapper.get("cartItemId");
     String qty = mapper.get("qty");
-
+     
+     
     // CartItem cartItem = cartItemService.findById(Long.parseLong(cartItemId));
     // cartItem.setQty(Integer.parseInt(qty));
 

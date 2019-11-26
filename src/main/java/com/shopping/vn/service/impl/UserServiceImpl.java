@@ -3,17 +3,18 @@ package com.shopping.vn.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.shopping.vn.dto.HistoryDto;
 import com.shopping.vn.dto.MenuDto;
 import com.shopping.vn.dto.SortFilterDto;
@@ -149,11 +150,10 @@ public class UserServiceImpl implements UserService {
     user.setPassword(encoder.encode(userDto.getPassword()));
     userRepository.save(user);
     // save history
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+    
     HistoryDto historyDto = new HistoryDto();
     historyDto.setDescrition("add new user" + " " + userDto.getEmail());
-    historyService.historyAdd(historyDto, findUserByEmail);
+    historyService.historyAdd(historyDto);
 
   }
 
@@ -169,11 +169,9 @@ public class UserServiceImpl implements UserService {
     }
     userRepository.save(User.convertUpdate(userDto, user, roles));
     // save history
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    User findUserByEmail = userRepository.findUserByEmail(principal.toString());
     HistoryDto historyDto = new HistoryDto();
     historyDto.setDescrition("update user" + " " + userDto.getEmail());
-    historyService.historyUpdate(historyDto, findUserByEmail);
+    historyService.historyUpdate(historyDto);
   }
 
   @Override
@@ -182,13 +180,11 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
     user.setStatus(1);
     userRepository.save(user);
-
-    // save history
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+    
     HistoryDto historyDto = new HistoryDto();
     historyDto.setDescrition("delete user" + " " + user.getEmail());
-    historyService.historyDelete(historyDto, findUserByEmail);
+    historyService.historyDelete(historyDto);
+   
   }
 
 

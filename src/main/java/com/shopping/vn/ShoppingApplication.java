@@ -4,14 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.shopping.vn.config.AppProperties;
+import com.shopping.vn.utils.ServiceStatus;
 
 @SpringBootApplication
 
@@ -19,6 +15,11 @@ public class ShoppingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShoppingApplication.class, args);
+		ServiceStatus[] serviceStatuses = ServiceStatus.values();
+		for (ServiceStatus serviceStatus : serviceStatuses) {
+			System.out.println(
+					serviceStatus.getId() + " " + serviceStatus.getMessage() + " " + serviceStatus.getStatus());
+		}
 	}
 
 	@Bean

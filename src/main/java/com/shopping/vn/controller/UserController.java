@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -123,7 +124,7 @@ public class UserController {
 		return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
 	}
 
-	@GetMapping(value = Constants.User.DELETE_USER, produces = { MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE })
+	@DeleteMapping(value = Constants.User.DELETE_USER, produces = { MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE })
 	@ApiOperation(value = "update status user", response = List.class)
 	public ResponseEntity<ServiceStatus> deleteUser(
 			@ApiParam(value = "id user use get", required = true) @PathVariable Long id) {
