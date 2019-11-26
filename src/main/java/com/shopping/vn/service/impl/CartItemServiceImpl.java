@@ -80,8 +80,8 @@ public class CartItemServiceImpl implements CartItemService {
 	}
 
 	@Override
-	public Boolean removeCartItem(CartItemDto cartItemDto) {
-		CartItem cartItem = cartItemRepository.findById(cartItemDto.getId())
+	public Boolean removeCartItem(Long id) {
+		CartItem cartItem = cartItemRepository.findById(id)
 				.orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.CART_ITEM_NOT_FOUND));
 		bookToCartItemRepository.deleteByCartItem(cartItem);
 		cartItemRepository.delete(cartItem);

@@ -47,7 +47,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     
     for(CartItem cartItem : cartItemList) {
         cartItem.setShoppingCart(null);
-       // cartItemService.save(cartItem);
+        cartItemRepository.save(cartItem);
     }
     
     shoppingCart.setGrandTotal(new BigDecimal(0));

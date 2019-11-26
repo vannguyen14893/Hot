@@ -7,7 +7,7 @@ import com.shopping.vn.entity.CartItem;
 public interface CartItemService {
   CartItem addBookToCartItem(ProductDto productDto, int qty);
 
-  Boolean removeCartItem(CartItemDto cartItem);
+  Boolean removeCartItem(Long id);
 
   CartItem save(CartItemDto cartItem);
 

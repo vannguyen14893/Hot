@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.shopping.vn.dto.CartItemDto;
 import com.shopping.vn.dto.ProductDto;
 import com.shopping.vn.entity.CartItem;
 import com.shopping.vn.entity.ShoppingCart;
@@ -60,22 +61,14 @@ public class ShoppingCartController {
   }
 
   @GetMapping("/removeItem")
-  public ResponseEntity<?> removeItem(@RequestBody String id) {
-    cartItemService.removeCartItem(cartItemService.findById(Long.parseLong(id)));
-    return new ResponseEntity<>("Cart Item Removed Successfully!", HttpStatus.OK);
+  public ResponseEntity<?> removeItem(@RequestBody Long id) {
+    cartItemService.removeCartItem(id);
+    return new ResponseEntity<>(ServiceStatus.DELETE_SUCCESS, HttpStatus.OK);
   }
 
   @RequestMapping("/updateCartItem")
-  public ResponseEntity<?> updateCartItem(@RequestBody HashMap<String, String> mapper) {
-    String cartItemId = mapper.get("cartItemId");
-    String qty = mapper.get("qty");
-     
-     
-    // CartItem cartItem = cartItemService.findById(Long.parseLong(cartItemId));
-    // cartItem.setQty(Integer.parseInt(qty));
-
-    // cartItemService.updateCartItem(cartItem);
-
-    return new ResponseEntity<>("Cart Item Updated Successfully!", HttpStatus.OK);
+  public ResponseEntity<?> updateCartItem(@RequestBody CartItemDto cartItemDto) {
+    cartItemService.updateCartItem(cartItemDto);
+    return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
   }
 }
