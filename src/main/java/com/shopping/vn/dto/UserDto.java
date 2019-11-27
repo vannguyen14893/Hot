@@ -37,6 +37,7 @@ public class UserDto {
   private List<Long> roleIds;
   private ShoppingCartDto shoppingCartDto;
   private String avatar;
+  private Long count;
   public static final UserDto convertUser(User user) {
    
     UserDto userDto = new UserDto();

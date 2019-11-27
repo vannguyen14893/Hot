@@ -4,24 +4,32 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.shopping.vn.config.AppProperties;
-import com.shopping.vn.utils.ServiceStatus;
 
 @SpringBootApplication
-
+@EnableScheduling
+@Configuration
 public class ShoppingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShoppingApplication.class, args);
-		ServiceStatus[] serviceStatuses = ServiceStatus.values();
-		for (ServiceStatus serviceStatus : serviceStatuses) {
-			System.out.println(
-					serviceStatus.getId() + " " + serviceStatus.getMessage() + " " + serviceStatus.getStatus());
-		}
-	}
 
+	}
+	@Bean
+	public TaskScheduler taskScheduler() {
+		ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+		scheduler.setThreadNamePrefix("TaskScheduler");
+		scheduler.setPoolSize(10);
+		scheduler.setWaitForTasksToCompleteOnShutdown(true);
+		scheduler.setAwaitTerminationSeconds(20);
+		return scheduler;
+	}
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();

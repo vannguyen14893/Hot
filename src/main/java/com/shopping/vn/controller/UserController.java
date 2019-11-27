@@ -148,4 +148,10 @@ public class UserController {
 		UserDto user = userService.findById(id);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
+	@PostMapping(value = "/count", produces = { MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<UserDto> getCount(
+			@RequestBody SortFilterDto filter) {
+		UserDto user = userService.countUser(filter);
+		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
 }

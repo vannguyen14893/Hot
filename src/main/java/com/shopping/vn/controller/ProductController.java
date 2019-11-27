@@ -75,4 +75,10 @@ public class ProductController {
 		productService.updateProduct(productDto);
 		return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
 	}
+
+	@PostMapping(value = "/count-product")
+	public ResponseEntity<ProductDto> countProduct(@RequestBody SortFilterDto filter) {
+		ProductDto countProduct = productService.countProduct(filter);
+		return new ResponseEntity<>(countProduct, HttpStatus.OK);
+	}
 }

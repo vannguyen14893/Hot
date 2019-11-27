@@ -6,4 +6,6 @@ import com.shopping.vn.entity.User;
 
 public interface UserRepositoryCustomer {
   List<User> readAll(SortFilterDto filter);
+  
+  Long countUser(SortFilterDto filter);
 }

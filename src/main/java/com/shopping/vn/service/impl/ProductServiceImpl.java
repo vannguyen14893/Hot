@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setStock(productDto.getStock());
 		product.setStatus(productDto.getStatus());
 		product.setCategory(category);
-		
+
 		List<ProductSize> productSizes = new ArrayList<>();
 		SizeDto sizeDto = null;
 		Size size = null;
@@ -145,7 +145,7 @@ public class ProductServiceImpl implements ProductService {
 		List<Integer> totalProduct = new ArrayList<>();
 		Category category = categoryRepository.findById(productDto.getCategory().getId())
 				.orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.CATEGORY_NOT_FOUND));
-		
+
 		product.setId(productDto.getId());
 		product.setDescription(productDto.getDescription());
 		product.setName(productDto.getName());
@@ -154,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setStock(productDto.getStock());
 		product.setStatus(productDto.getStatus());
 		product.setCategory(category);
-		
+
 		List<ProductSize> productSizes = new ArrayList<>();
 		SizeDto sizeDto = null;
 		Size size = null;
@@ -171,7 +171,7 @@ public class ProductServiceImpl implements ProductService {
 			productSize.setSize(size);
 			productSize.setProduct(product);
 			size.getSizeColors().clear();
-			
+
 			for (SizeColorDto sizeColorDto : sizeDto.getSizeColorDtos()) {
 				SizeColor sizeColor = sizeColorRepository.findById(sizeColorDto.getId())
 						.orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.SIZE_COLOR_NOT_FOUND));
@@ -194,6 +194,14 @@ public class ProductServiceImpl implements ProductService {
 		product.setNumber(sumProduct);
 		productRepository.save(product);
 		return product;
+	}
+
+	@Override
+	public ProductDto countProduct(SortFilterDto filter) {
+		Long countProduct = productRepository.countProduct(filter);
+		ProductDto productDto = new ProductDto();
+		productDto.setCount(countProduct);
+		return productDto;
 	}
 
 }

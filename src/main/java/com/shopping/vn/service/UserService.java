@@ -26,6 +26,7 @@ public interface UserService extends UserDetailsService {
   List<UserDto> readAll(SortFilterDto filter);
 
   UserDto findById(Long id);
-
+ 
+  UserDto countUser(SortFilterDto filter);
 
 }

@@ -205,4 +205,12 @@ public class UserServiceImpl implements UserService {
     return UserDto.convertUser(user);
   }
 
+@Override
+public UserDto countUser(SortFilterDto filter) {
+	Long countUser = userRepository.countUser(filter);
+	UserDto userDto=new UserDto();
+	userDto.setCount(countUser);
+	return userDto;
+}
+
 }

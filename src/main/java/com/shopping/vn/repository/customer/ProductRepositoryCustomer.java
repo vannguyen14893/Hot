@@ -5,5 +5,7 @@ import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.entity.Product;
 
 public interface ProductRepositoryCustomer {
-  List<Product> readAll(SortFilterDto filter);
+	List<Product> readAll(SortFilterDto filter);
+
+	Long countProduct(SortFilterDto filter);
 }

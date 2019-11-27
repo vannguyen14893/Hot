@@ -27,7 +27,7 @@ public class ProductDto {
 	private List<String> nameColors;
 	private List<Integer> numberSizes;
 	private List<String> images;
-
+    private Long count;
 	public static final ProductDto convert(Product product) {
 
 		ProductDto productDto = new ProductDto();
