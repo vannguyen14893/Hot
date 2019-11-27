@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,14 +39,14 @@ public class CommentController {
     return new ResponseEntity<>(ServiceStatus.ADD_SUCCESS, HttpStatus.OK);
   }
 
-  @DeleteMapping(value = "/delete-comment-parent")
-  public ResponseEntity<?> deleteCommentParent(@RequestBody Long id) {
+  @DeleteMapping(value = "/delete-comment-parent/{id}")
+  public ResponseEntity<?> deleteCommentParent(@PathVariable Long id) {
     commentService.deleteCommentParent(id);
     return new ResponseEntity<>(ServiceStatus.DELETE_SUCCESS, HttpStatus.OK);
   }
 
-  @DeleteMapping(value = "/delete-comment-child")
-  public ResponseEntity<?> deleteCommentChild(@RequestBody Long id) {
+  @DeleteMapping(value = "/delete-comment-child/{id}")
+  public ResponseEntity<?> deleteCommentChild(@PathVariable Long id) {
     commentService.deleteCommentChild(id);
     return new ResponseEntity<>(ServiceStatus.DELETE_SUCCESS, HttpStatus.OK);
   }
@@ -56,14 +57,14 @@ public class CommentController {
     return new ResponseEntity<>(ServiceStatus.UPDATE_SUCCESS, HttpStatus.OK);
   }
 
-  @PostMapping(value = "/read-comment-parent")
-  public ResponseEntity<?> readCommentParent(@RequestBody Long productId) {
+  @PostMapping(value = "/read-comment-parent/{productId}")
+  public ResponseEntity<?> readCommentParent(@PathVariable Long productId) {
     List<CommentDto> readCommentParent = commentService.readCommentParent(productId);
     return new ResponseEntity<>(readCommentParent, HttpStatus.OK);
   }
 
-  @PostMapping(value = "/read-comment-child")
-  public ResponseEntity<?> readCommentChild(@RequestBody Long id) {
+  @PostMapping(value = "/read-comment-child/{id}")
+  public ResponseEntity<?> readCommentChild(@PathVariable Long id) {
     List<CommentDto> readCommentChild = commentService.readCommentChild(id);
     return new ResponseEntity<>(readCommentChild, HttpStatus.OK);
   }
