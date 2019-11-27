@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostPersist;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,21 +18,27 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment implements Serializable {
+public class Notification implements Serializable {
 
-  private static final long serialVersionUID = 8678503718993766541L;
+  private static final long serialVersionUID = -3553774885603127579L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String message;
-  @ManyToOne
-  @JoinColumn(name = "product_id")
-  private Product product;
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User createUser;
-  private Long parentId;
+  private String content;
+  private Boolean status;
   private Date createdDate;
-  private Date updatedDate;
-  
+  @ManyToOne
+  @JoinColumn(name = "receiver_id")
+  @JsonIgnore
+  private User receiver;
+  @ManyToOne
+  @JoinColumn(name = "sender_id")
+  @JsonIgnore
+  private User sender;
+  @ManyToOne
+  @JoinColumn(name = "comment_id")
+  @JsonIgnore
+  private Comment comment;
+
 }

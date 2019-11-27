@@ -10,6 +10,7 @@ import com.shopping.vn.entity.User;
 import com.shopping.vn.repository.HistoryRepository;
 import com.shopping.vn.repository.UserRepository;
 import com.shopping.vn.service.HistoryService;
+import com.shopping.vn.utils.Utils;
 
 @Service
 @Transactional
@@ -21,22 +22,19 @@ public class HistoryServiceImpl implements HistoryService {
 
 	@Override
 	public History historyAdd(HistoryDto history) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		User findUserByEmail = userRepository.findUserByEmail(Utils.getPrincipal());
 		return historyRepository.save(History.convertSave(history, findUserByEmail));
 	}
 
 	@Override
 	public History historyUpdate(HistoryDto history) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		User findUserByEmail = userRepository.findUserByEmail(Utils.getPrincipal());
 		return historyRepository.save(History.convertUpdate(history, findUserByEmail));
 	}
 
 	@Override
 	public History historyDelete(HistoryDto history) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User findUserByEmail = userRepository.findUserByEmail(principal.toString());
+		User findUserByEmail = userRepository.findUserByEmail(Utils.getPrincipal());
 		return historyRepository.save(History.convertDelete(history, findUserByEmail));
 	}
 

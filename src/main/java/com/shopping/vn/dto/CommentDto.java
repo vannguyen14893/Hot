@@ -10,4 +10,6 @@ public class CommentDto {
 	private UserDto createUser;
 	private Long parentId;
 	private Long productId;
+	private String email;
+	private Long countCommentChilds;
 }

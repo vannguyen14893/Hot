@@ -3,18 +3,17 @@ package com.shopping.vn.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.shopping.vn.dto.HistoryDto;
 import com.shopping.vn.dto.MenuDto;
 import com.shopping.vn.dto.SortFilterDto;
@@ -150,7 +149,7 @@ public class UserServiceImpl implements UserService {
     user.setPassword(encoder.encode(userDto.getPassword()));
     userRepository.save(user);
     // save history
-    
+
     HistoryDto historyDto = new HistoryDto();
     historyDto.setDescrition("add new user" + " " + userDto.getEmail());
     historyService.historyAdd(historyDto);
@@ -176,15 +175,15 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(Long id) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
+    User user = userRepository.findById(id).orElseThrow(
+        () -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
     user.setStatus(1);
     userRepository.save(user);
-    
+
     HistoryDto historyDto = new HistoryDto();
     historyDto.setDescrition("delete user" + " " + user.getEmail());
     historyService.historyDelete(historyDto);
-   
+
   }
 
 
@@ -200,17 +199,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto findById(Long id) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
+    User user = userRepository.findById(id).orElseThrow(
+        () -> new RuntimeExceptionHandling(Constants.MESSENGER.USER_NOT_FOUND + " " + id));
     return UserDto.convertUser(user);
   }
 
-@Override
-public UserDto countUser(SortFilterDto filter) {
-	Long countUser = userRepository.countUser(filter);
-	UserDto userDto=new UserDto();
-	userDto.setCount(countUser);
-	return userDto;
-}
-
+  @Override
+  public UserDto countUser(SortFilterDto filter) {
+    Long countUser = userRepository.countUser(filter);
+    UserDto userDto = new UserDto();
+    userDto.setCount(countUser);
+    return userDto;
+  }
 }
