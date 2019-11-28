@@ -2,11 +2,12 @@ package com.shopping.vn.service.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.shopping.vn.dto.CartItemDto;
 import com.shopping.vn.dto.ProductDto;
 import com.shopping.vn.entity.BookToCartItem;
@@ -21,6 +22,7 @@ import com.shopping.vn.repository.ProductRepository;
 import com.shopping.vn.repository.UserRepository;
 import com.shopping.vn.service.CartItemService;
 import com.shopping.vn.utils.Constants;
+import com.shopping.vn.utils.Utils;
 
 @Service
 @Transactional
@@ -39,8 +41,7 @@ public class CartItemServiceImpl implements CartItemService {
 
 	@Override
 	public CartItem addBookToCartItem(ProductDto productDto, int qty) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = userRepository.findUserByEmail(principal.toString());
+		User user = userRepository.findUserByEmail(Utils.getPrincipal());
 		List<CartItem> cartItems = findByShoppingCart(user.getShoppingCart());
 
 		for (CartItem cartItem : cartItems) {

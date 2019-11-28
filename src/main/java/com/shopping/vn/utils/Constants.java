@@ -32,5 +32,6 @@ public class Constants {
     public static final String PRODUCT_SIZE_NOT_FOUND = "ProductSize not found";
     public static final String SIZE_COLOR_NOT_FOUND = "SizeColor not found";
     public static final String CART_ITEM_NOT_FOUND = "CartItem not found";
+    public static final String COMMENT_NOT_FOUND = "Comment not found";
   }
 }

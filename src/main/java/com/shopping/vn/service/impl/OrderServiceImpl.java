@@ -16,8 +16,10 @@ import com.shopping.vn.repository.CartItemRepository;
 import com.shopping.vn.repository.OrderRepository;
 import com.shopping.vn.repository.ShoppingCartRepository;
 import com.shopping.vn.repository.UserRepository;
+import com.shopping.vn.service.NotificationService;
 import com.shopping.vn.service.OrderService;
 import com.shopping.vn.service.ShoppingCartService;
+import com.shopping.vn.utils.Utils;
 
 @Service
 @Transactional
@@ -32,10 +34,10 @@ public class OrderServiceImpl implements OrderService {
   private UserRepository userRepository;
   @Autowired
   private ShoppingCartService shoppingCartService;
+ 
   @Override
-  public Order createOrder(OrderDto orderDto) {
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    User user = userRepository.findUserByEmail(principal.toString());
+  public synchronized Order createOrder(OrderDto orderDto) {
+    User user = userRepository.findUserByEmail(Utils.getPrincipal());
     ShoppingCart shoppingCart = shoppingCartRepository.findByUserEmail(user.getEmail());
     
     Order order = new Order();
@@ -45,7 +47,9 @@ public class OrderServiceImpl implements OrderService {
     order.setOrderDate(Calendar.getInstance().getTime());
     order.setShippingDate(orderDto.getShippingDate());
     order.setUser(user);
+    
     shoppingCartService.clearShoppingCart(shoppingCart);
+    
     List<CartItem> cartItems = cartItemRepository.findByShoppingCart(shoppingCart);
     for (CartItem cartItem : cartItems) {
       Product product = cartItem.getProduct();
@@ -53,7 +57,6 @@ public class OrderServiceImpl implements OrderService {
       product.setNumber(product.getNumber() - cartItem.getQty());
     }
     order.setCartItemList(cartItems);
-    
     orderRepository.save(order);
     
     return order;

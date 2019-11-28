@@ -3,11 +3,13 @@ package com.shopping.vn.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import com.shopping.vn.dto.CommentDto;
 import com.shopping.vn.dto.NotificationDto;
 import com.shopping.vn.entity.Comment;
@@ -50,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
     List<Comment> comments = commentRepository.findByProductAndParentId(product.getId());
     if (!CollectionUtils.isEmpty(comments)) {
       for (Comment comment2 : comments) {
-        if (comment2.getCreateUser().getId() != user.getId()) {
+        if (!comment2.getCreateUser().getId().equals(user.getId())) {
           NotificationDto notificationDto = new NotificationDto();
           User userReceiver = userRepository.findUserByEmail(comment2.getCreateUser().getEmail());
           notificationDto.setContent("create comment");
@@ -65,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   public synchronized Comment createCommentChild(CommentDto commentDto) {
     Comment comment = commentRepository.findById(commentDto.getId())
-        .orElseThrow(() -> new RuntimeExceptionHandling("Comment not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.COMMENT_NOT_FOUND));
     Product product = productRepository.findById(commentDto.getProductId())
         .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.PRODUCT_NOT_FOUND));
     comment.setProduct(product);
@@ -88,9 +90,9 @@ public class CommentServiceImpl implements CommentService {
   @Override
   public boolean deleteCommentParent(Long id) {
     Comment comment = commentRepository.findById(id)
-        .orElseThrow(() -> new RuntimeExceptionHandling("Comment not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.COMMENT_NOT_FOUND));
     User user = userRepository.findUserByEmail(Utils.getPrincipal());
-    if (comment.getCreateUser().getId() == user.getId()) {
+    if (comment.getCreateUser().getId().equals(user.getId())) {
       List<Comment> comments = commentRepository.findByParentId(id);
       comments.add(comment);
       commentRepository.deleteAll(comments);
@@ -102,20 +104,20 @@ public class CommentServiceImpl implements CommentService {
   @Override
   public boolean deleteCommentChild(Long id) {
     Comment comment = commentRepository.findById(id)
-        .orElseThrow(() -> new RuntimeExceptionHandling("Comment not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.COMMENT_NOT_FOUND));
     User user = userRepository.findUserByEmail(Utils.getPrincipal());
-    if (comment.getCreateUser().getId() == user.getId()) {
+    if (comment.getCreateUser().getId().equals(user.getId())) {
       commentRepository.delete(comment);
       return true;
     }
 
     return false;
   }
-
+  
   @Override
   public Comment updateComment(CommentDto commentDto) {
     Comment comment = commentRepository.findById(commentDto.getId())
-        .orElseThrow(() -> new RuntimeExceptionHandling("Comment not found"));
+        .orElseThrow(() -> new RuntimeExceptionHandling(Constants.MESSENGER.COMMENT_NOT_FOUND));
     comment.setId(commentDto.getId());
     comment.setMessage(commentDto.getMessage());
     comment.setParentId(commentDto.getParentId());
