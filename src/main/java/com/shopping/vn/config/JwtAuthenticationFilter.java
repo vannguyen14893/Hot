@@ -37,6 +37,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, FilterChain filterChain)
       throws ServletException, IOException {
+    httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+    httpServletResponse.setHeader("Access-Control-Allow-Methods", "*");
+    httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
+    httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
     try {
       String jwt = getJWTFromRequest(httpServletRequest);
       if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {

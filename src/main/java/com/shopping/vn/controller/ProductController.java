@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,19 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.shopping.vn.dto.ProductDto;
 import com.shopping.vn.dto.SortFilterDto;
+import com.shopping.vn.entity.Category;
 import com.shopping.vn.exceptions.RuntimeExceptionHandling;
+import com.shopping.vn.repository.CategoryRepository;
 import com.shopping.vn.service.MapValidationErrorService;
 import com.shopping.vn.service.ProductService;
 import com.shopping.vn.utils.ServiceStatus;
 
 @RestController
 @RequestMapping("/api/product")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ProductController {
 	@Autowired
 	private ProductService productService;
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
 	@PostMapping(value = "/list-product")
 	public ResponseEntity<?> readAll(@RequestBody SortFilterDto filter) {
 		List<ProductDto> productDtos = productService.readAll(filter);
@@ -37,7 +43,14 @@ public class ProductController {
 		}
 		return new ResponseEntity<>(productDtos, HttpStatus.OK);
 	}
-
+	@PostMapping(value = "/list-category")
+    public ResponseEntity<?> readCategory(@RequestBody String name) {
+        List<String> categories = categoryRepository.readCategory(name);
+        if (categories.isEmpty()) {
+            return new ResponseEntity<>(ServiceStatus.NO_DATA, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
 	@PostMapping(value = "/add-product")
 	public ResponseEntity<?> create(@Valid @RequestBody ProductDto productDto, BindingResult result) {
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
@@ -77,8 +90,8 @@ public class ProductController {
 	}
 
 	@PostMapping(value = "/count-product")
-	public ResponseEntity<ProductDto> countProduct(@RequestBody SortFilterDto filter) {
-		ProductDto countProduct = productService.countProduct(filter);
+	public ResponseEntity<Long> countProduct(@RequestBody SortFilterDto filter) {
+		Long countProduct = productService.countProduct(filter);
 		return new ResponseEntity<>(countProduct, HttpStatus.OK);
 	}
 }

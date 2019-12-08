@@ -197,11 +197,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDto countProduct(SortFilterDto filter) {
+	public Long countProduct(SortFilterDto filter) {
 		Long countProduct = productRepository.countProduct(filter);
-		ProductDto productDto = new ProductDto();
-		productDto.setCount(countProduct);
-		return productDto;
+		return countProduct;
 	}
 
 }

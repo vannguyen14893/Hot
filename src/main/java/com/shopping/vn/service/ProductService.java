@@ -19,5 +19,5 @@ public interface ProductService {
   
   Product updateProduct(ProductDto productDto);
   
-  ProductDto countProduct(SortFilterDto filter);
+  Long countProduct(SortFilterDto filter);
 }

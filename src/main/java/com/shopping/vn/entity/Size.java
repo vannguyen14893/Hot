@@ -28,11 +28,10 @@ public class Size implements Serializable{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private Integer number;
-  @JsonIgnore
+  
   @OneToMany(mappedBy = "size", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
       orphanRemoval = true)
   private List<ProductSize> productSizes;
-  @JsonIgnore
   @OneToMany(mappedBy = "size", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<SizeColor> sizeColors;
 }

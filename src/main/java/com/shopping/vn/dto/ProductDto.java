@@ -41,6 +41,7 @@ public class ProductDto {
 		productDto.setNumber(product.getNumber());
 		productDto.setStatus(product.getStatus());
 		productDto.setVote(product.getVote());
+		productDto.setDescription(product.getDescription());
 		productDto.setImages(product.getImages());
 		productDto.setNameCategory(product.getCategory().getName());
 		List<ProductSize> productSizes = product.getProductSizes();

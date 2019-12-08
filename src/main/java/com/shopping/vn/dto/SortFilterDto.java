@@ -26,9 +26,9 @@ public class SortFilterDto {
   @ApiModelProperty("Name sort")
   private String sortName;
   @ApiModelProperty("Page use pagination")
-  private Integer page = 1;
+  private Integer page;
   @ApiModelProperty("Page size use pagination")
-  private Integer pageSize = 5;
+  private Integer pageSize ;
   @ApiModelProperty("Permission name of user")
   private String permission;
   private List<Long> categoryIds;
@@ -41,5 +41,6 @@ public class SortFilterDto {
   private List<String> stocks;
   private String title;
   private List<Long> roleIds;
+  private List<Long> productIds;
   
 }

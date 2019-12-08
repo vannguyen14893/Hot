@@ -9,13 +9,16 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.shopping.vn.config.AppProperties;
 
 @SpringBootApplication
 @EnableScheduling
 @Configuration
-public class ShoppingApplication {
+@EnableWebMvc
+public class ShoppingApplication implements WebMvcConfigurer{
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShoppingApplication.class, args);
@@ -49,5 +52,8 @@ public class ShoppingApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-
+	@Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
+    }
 }

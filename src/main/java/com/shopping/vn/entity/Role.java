@@ -20,7 +20,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
 public class Role implements Serializable {
 
   private static final long serialVersionUID = -8152277342831840241L;
