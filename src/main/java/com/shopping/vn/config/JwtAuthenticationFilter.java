@@ -2,6 +2,8 @@ package com.shopping.vn.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,15 +34,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   UserService userService;
 
   String permission = "";
-
+  private final List<String> allowedOrigins = Arrays.asList("http://localhost:4200");
   @Override
   protected void doFilterInternal(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, FilterChain filterChain)
       throws ServletException, IOException {
-    httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+    String origin = httpServletRequest.getHeader("Origin");
+    //httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
     httpServletResponse.setHeader("Access-Control-Allow-Methods", "*");
     httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
     httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
+    httpServletResponse.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "*");
     try {
       String jwt = getJWTFromRequest(httpServletRequest);
       if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
