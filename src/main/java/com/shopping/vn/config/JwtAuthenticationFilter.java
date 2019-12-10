@@ -35,16 +35,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   String permission = "";
   private final List<String> allowedOrigins = Arrays.asList("http://localhost:4200");
+
   @Override
   protected void doFilterInternal(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, FilterChain filterChain)
       throws ServletException, IOException {
     String origin = httpServletRequest.getHeader("Origin");
-    //httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+    // httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
     httpServletResponse.setHeader("Access-Control-Allow-Methods", "*");
     httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
     httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-    httpServletResponse.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "*");
+    httpServletResponse.setHeader("Access-Control-Allow-Origin",
+        allowedOrigins.contains(origin) ? origin : "*");
     try {
       String jwt = getJWTFromRequest(httpServletRequest);
       if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
@@ -60,14 +62,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
-
-      // Object principal =
-      // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-      // if (!userService.checkPermission(principal.toString(), permission)) {
-      // httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-      // return;
-      // }
+    
+//      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//      if (!userService.checkPermission(principal.toString(), permission)) {
+//        httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//        return;
+//      }
     } catch (Exception ex) {
       log.error("Could not set user authentication in security context", ex);
     }

@@ -55,7 +55,7 @@ public class UserController {
 	public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequestModel login, BindingResult result) {
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
 		if (errorMap != null)
-			return errorMap;
+			return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
 

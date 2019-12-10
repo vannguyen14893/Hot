@@ -48,11 +48,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     http.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
         .authorizeRequests().antMatchers(HttpMethod.POST, SecurityConstants.LOGIN_URL).permitAll()
         .antMatchers(HttpMethod.POST, Constants.User.SIGN_UP_URL).permitAll()
-        .antMatchers(HttpMethod.GET, Constants.User.DELETE_USER).permitAll()
-        .antMatchers("/api/product/count-product").permitAll()
-        .antMatchers("/api/product/delete-product").permitAll()
-        .antMatchers("/api/product/list-product").permitAll()
-        .antMatchers("/api/product/list-category").permitAll()
         .antMatchers(HttpMethod.GET, "/swagger").permitAll().anyRequest().authenticated().and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
