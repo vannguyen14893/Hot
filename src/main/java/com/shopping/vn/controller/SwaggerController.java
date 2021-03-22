@@ -17,10 +17,10 @@ public class SwaggerController {
 		return "redirect:/swagger-ui.html";
 	}
 
-	@MessageMapping("/socket")
-	@SendTo("/swagger/greetings")
-	public String greeting() {
-		return "Hello world";
-	}
+//	@MessageMapping("/socket")
+//	@SendTo("/swagger/greetings")
+//	public String greeting() {
+//		return "Hello world";
+//	}
 
 }

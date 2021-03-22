@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,7 @@ import com.shopping.vn.config.JwtTokenProvider;
 import com.shopping.vn.dto.MenuDto;
 import com.shopping.vn.dto.SortFilterDto;
 import com.shopping.vn.dto.UserDto;
-import com.shopping.vn.request.JWTLoginSucessReponse;
+import com.shopping.vn.request.JWTLoginSuccessResponse;
 import com.shopping.vn.request.UserLoginRequestModel;
 import com.shopping.vn.service.MapValidationErrorService;
 import com.shopping.vn.service.UserService;
@@ -62,7 +61,7 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = SecurityConstants.TOKEN_PREFIX + tokenProvider.generateToken(authentication);
 
-		return ResponseEntity.ok(new JWTLoginSucessReponse(true, jwt));
+		return ResponseEntity.ok(new JWTLoginSuccessResponse(true, jwt));
 
 	}
 
